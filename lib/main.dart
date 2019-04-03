@@ -1,4 +1,6 @@
 import 'dart:async';
+
+import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
 import 'package:backdrop/backdrop.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -22,6 +24,14 @@ class GradientColorsApp extends StatelessWidget {
         title: Text("Gradient Colors"),
         backpanel: OptionsRoute(),
         body: GradientViewRoute(),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.share),
+            onPressed: () {
+
+            },
+          ),
+        ],
       ),
     );
   }
