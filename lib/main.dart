@@ -12,8 +12,9 @@ void main() {
   runApp(GradientColorsApp());
 }
 
-List<Color> colorList = [Color(0xff84fab0),Color(0xff84fab0), Color(0xff8fd3f4)];
-
+List<ColorModel> colorModelList = [ColorModel(Color(0xff84fab0)), ColorModel(Color(0xff84fab0))];
+List<Color> colorList = List();
+List<Widget> colorItemList = List();
 
 class GradientColorsApp extends StatelessWidget {
   @override
@@ -39,22 +40,18 @@ class OptionsRoute extends StatefulWidget {
 }
 
 class _OptionsRouteState extends State<OptionsRoute> {
-  List<Widget> list;
   @override
   Widget build(BuildContext context) {
-    list = List();
-    for( var i = 0 ; i < colorList.length; i++ ) {
-      list.add(ColorItem(index: i));
-    }
+    colorModelList.forEach((f) => colorItemList.add(ColorItem(colorModel: f)));
+
     return Container(
       child: Column(
        children: <Widget>[Column(
-          children: list
+          children: colorItemList
         ),
        FlatButton.icon(
            onPressed: () =>
-
-               colorList.add(Color(0xff443a49)),
+               colorModelList.add(ColorModel(Color(0xff443a49))),
            icon: Icon(Icons.add),
            label: Text("Add a new color")
        )
@@ -74,6 +71,8 @@ class GradientViewRoute extends StatefulWidget {
 class _GradientViewRouteState extends State<GradientViewRoute> {
   @override
   Widget build(BuildContext context) {
+    colorModelList.forEach((f) => colorList.add(f.mColor));
+
     return Center(
       child: new Container(
         decoration: new BoxDecoration(
@@ -93,20 +92,20 @@ class _GradientViewRouteState extends State<GradientViewRoute> {
 }
 
 class ColorItem extends StatefulWidget {
-  ColorItem({this.index});
-  final index;
+  ColorItem({this.colorModel});
+  final colorModel;
   @override
-  _ColorItemState createState() => _ColorItemState(index: index);
+  _ColorItemState createState() => _ColorItemState(colorModel: colorModel);
 }
 
 class _ColorItemState extends State<ColorItem> {
-  _ColorItemState({this.index});
-  final index;
+  _ColorItemState({this.colorModel});
+  final ColorModel colorModel;
   Color pickerColor = Color(0xff443a49);
 
-  void changeColor(Color color) => setState(() => colorList[index] = color);
+  void changeColor(Color color) => setState(() => colorModel.mColor = color);
   void changeColorAndPopout(Color color) => setState(() {
-        colorList[index] = color;
+        colorModel.mColor = color;
         Timer(const Duration(milliseconds: 500),
             () => Navigator.of(context).pop());
       });
@@ -129,7 +128,7 @@ class _ColorItemState extends State<ColorItem> {
                         contentPadding: const EdgeInsets.all(0.0),
                         content: SingleChildScrollView(
                           child: ColorPicker(
-                            pickerColor: colorList[index],
+                            pickerColor: colorModel.mColor,
                             onColorChanged: changeColor,
                             colorPickerWidth: 1000.0,
                             pickerAreaHeightPercent: 0.7,
@@ -140,10 +139,10 @@ class _ColorItemState extends State<ColorItem> {
                     },
                   );
                 },
-                color: colorList[index],
+                color: colorModel.mColor,
               )),
             ),
-            Text(colorList[index].toString())
+            Text(colorModel.mColor.toString())
           ],
         ),
       ),
@@ -156,5 +155,8 @@ class _ColorItemState extends State<ColorItem> {
   }
 }
 class ColorModel{
-  Color color;
+  Color mColor;
+  ColorModel(Color color){
+    mColor = color;
+  }
 }
