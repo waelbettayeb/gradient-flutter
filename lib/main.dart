@@ -1,6 +1,8 @@
 import 'dart:async';
 
+
 import 'package:flutter/rendering.dart';
+
 import 'package:flutter/material.dart';
 import 'package:backdrop/backdrop.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -10,7 +12,7 @@ void main() {
   runApp(GradientColorsApp());
 }
 
-List<Color> colorList = [Color(0xff84fab0), Color(0xff8fd3f4)];
+List<Color> colorList = [Color(0xff84fab0),Color(0xff84fab0), Color(0xff8fd3f4)];
 
 
 class GradientColorsApp extends StatelessWidget {
@@ -24,14 +26,6 @@ class GradientColorsApp extends StatelessWidget {
         title: Text("Gradient Colors"),
         backpanel: OptionsRoute(),
         body: GradientViewRoute(),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.share),
-            onPressed: () {
-
-            },
-          ),
-        ],
       ),
     );
   }
@@ -45,15 +39,28 @@ class OptionsRoute extends StatefulWidget {
 }
 
 class _OptionsRouteState extends State<OptionsRoute> {
+  List<Widget> list;
   @override
   Widget build(BuildContext context) {
+    list = List();
+    for( var i = 0 ; i < colorList.length; i++ ) {
+      list.add(ColorItem(index: i));
+    }
     return Container(
-          child: Column(
-            children: <Widget>[
-              ColorItem(index: 0),
-              ColorItem(index: 1),
-          ],
-    ));
+      child: Column(
+       children: <Widget>[Column(
+          children: list
+        ),
+       FlatButton.icon(
+           onPressed: () =>
+
+               colorList.add(Color(0xff443a49)),
+           icon: Icon(Icons.add),
+           label: Text("Add a new color")
+       )
+       ]
+      )
+    );
   }
 }
 
@@ -96,18 +103,15 @@ class _ColorItemState extends State<ColorItem> {
   _ColorItemState({this.index});
   final index;
   Color pickerColor = Color(0xff443a49);
-  Color currentColor =  Color(0xff443a49);
 
   void changeColor(Color color) => setState(() => colorList[index] = color);
   void changeColorAndPopout(Color color) => setState(() {
-        currentColor = color;
         colorList[index] = color;
         Timer(const Duration(milliseconds: 500),
             () => Navigator.of(context).pop());
       });
 
   Widget build(BuildContext context) {
-    currentColor = colorList[index];
     return Container(
       child: Container(
         child: Row(
@@ -125,7 +129,7 @@ class _ColorItemState extends State<ColorItem> {
                         contentPadding: const EdgeInsets.all(0.0),
                         content: SingleChildScrollView(
                           child: ColorPicker(
-                            pickerColor: currentColor,
+                            pickerColor: colorList[index],
                             onColorChanged: changeColor,
                             colorPickerWidth: 1000.0,
                             pickerAreaHeightPercent: 0.7,
@@ -136,10 +140,10 @@ class _ColorItemState extends State<ColorItem> {
                     },
                   );
                 },
-                color: currentColor,
+                color: colorList[index],
               )),
             ),
-            Text(currentColor.toString())
+            Text(colorList[index].toString())
           ],
         ),
       ),
@@ -150,4 +154,7 @@ class _ColorItemState extends State<ColorItem> {
           color: ThemeData.dark().cardColor),
     );
   }
+}
+class ColorModel{
+  Color color;
 }
