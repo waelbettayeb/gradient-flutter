@@ -1,19 +1,20 @@
 import 'dart:async';
 
-
 import 'package:flutter/rendering.dart';
 
 import 'package:flutter/material.dart';
 import 'package:backdrop/backdrop.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
-
 void main() {
   runApp(GradientColorsApp());
 }
 
-List<Color> colorList = [Color(0xff84fab0),Color(0xff84fab0), Color(0xff8fd3f4)];
-
+List<Color> colorList = [
+  Color(0xff8fd3f4),
+  Color(0xff244afc),
+  Color(0xff000000)
+];
 
 class GradientColorsApp extends StatelessWidget {
   @override
@@ -39,27 +40,44 @@ class OptionsRoute extends StatefulWidget {
 }
 
 class _OptionsRouteState extends State<OptionsRoute> {
-  List<Widget> list;
+  List<Widget> list = new List<Widget>();
+  addColor() {
+    colorList.add(Color(0xff000000));
+    setState(() => this.list.add(ColorItem(index: colorList.length)));
+  }
+  deleteColor() {
+    if(colorList.length > 2){
+      colorList.removeLast();
+      setState(() => this.list.removeLast());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    list = List();
-    for( var i = 0 ; i < colorList.length; i++ ) {
+    list.clear();
+    for (var i = 0; i < colorList.length; i++) {
       list.add(ColorItem(index: i));
     }
     return Container(
-      child: Column(
-       children: <Widget>[Column(
-          children: list
+      child: Column(children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+          FlatButton.icon(
+            onPressed: () => addColor(),
+            icon: Icon(Icons.add),
+            label: Text("Add a new color")
+          ),
+          FlatButton.icon(
+            onPressed: () => deleteColor(),
+            icon: Icon(Icons.delete),
+            label: Text("Delete a color")
+          )
+        ]),
+        Column(
+            children: list
         ),
-       FlatButton.icon(
-           onPressed: () =>
-
-               colorList.add(Color(0xff443a49)),
-           icon: Icon(Icons.add),
-           label: Text("Add a new color")
-       )
-       ]
-      )
+      ])
     );
   }
 }
@@ -84,8 +102,7 @@ class _GradientViewRouteState extends State<GradientViewRoute> {
           gradient: new LinearGradient(
               colors: colorList,
               begin: Alignment.topCenter,
-              end: Alignment.bottomCenter
-          ),
+              end: Alignment.bottomCenter),
         ),
       ),
     );
@@ -102,7 +119,7 @@ class ColorItem extends StatefulWidget {
 class _ColorItemState extends State<ColorItem> {
   _ColorItemState({this.index});
   final index;
-  Color pickerColor = Color(0xff443a49);
+  Color pickerColor = Color(0xff000000);
 
   void changeColor(Color color) => setState(() => colorList[index] = color);
   void changeColorAndPopout(Color color) => setState(() {
@@ -120,8 +137,8 @@ class _ColorItemState extends State<ColorItem> {
               margin: EdgeInsets.all(8),
               child: Center(
                   child: RaisedButton(
-                  elevation: 3.0,
-                  onPressed: () {
+                elevation: 3.0,
+                onPressed: () {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -155,6 +172,7 @@ class _ColorItemState extends State<ColorItem> {
     );
   }
 }
-class ColorModel{
+
+class ColorModel {
   Color color;
 }

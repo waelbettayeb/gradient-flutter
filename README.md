@@ -19,7 +19,8 @@ samples, guidance on mobile development, and a full API reference.
 
 - [x] background visualisation
 - [x] customizing colors
-- [ ] add new colors
+- [x] add new color
+- [x] delete last color
 - [ ] manage colors
 - [ ] manage colors' angle
 - [ ] share background as an image
